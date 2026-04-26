@@ -140,7 +140,7 @@ body {
     display: flex;
     gap: 20px;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
     padding: 20px;
 }
 
@@ -151,13 +151,28 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: 30px;
-    padding: 25px;
+    border-radius: 25px;
+    padding: 15px;
     box-shadow: var(--glass-shadow);
     display: flex;
     flex-direction: column;
     z-index: 10;
     transition: all 0.3s ease;
+    height: 700px;
+}
+
+#basic-calc-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+#currency-calc-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
 }
 
 /* Top Bar */
@@ -165,7 +180,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .top-bar-right {
@@ -193,12 +208,11 @@ body {
     color: var(--text-main);
 }
 
-/* Display */
 .display {
     text-align: right;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     padding: 10px;
-    min-height: 100px;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -221,11 +235,15 @@ body {
     transition: font-size 0.1s ease;
 }
 
-/* Keypad */
 .keypad {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+    gap: 10px;
+}
+
+#basic-calc-view .keypad {
+    flex-grow: 1;
+    grid-template-rows: repeat(5, 1fr);
 }
 
 .btn {
@@ -235,13 +253,18 @@ body {
     font-size: 1.5rem;
     font-weight: 500;
     border-radius: 20px;
-    padding: 20px 0;
+    padding: 15px 0;
     cursor: pointer;
     transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#basic-calc-view .btn {
+    height: 100%;
+    padding: 0;
 }
 
 /* Hover and Active effects */
@@ -525,4 +548,226 @@ body {
     background: var(--btn-hover);
     color: var(--text-main);
     font-weight: 500;
+}
+
+/* Currency Calculator Styles */
+.currency-display {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+
+.currency-row {
+    background: var(--btn-bg);
+    border-radius: 15px;
+    padding: 10px 12px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.currency-row.active {
+    border-color: var(--operator-color);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.currency-select {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-family: inherit;
+    width: 100%;
+    margin-bottom: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.currency-select option {
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
+.currency-amount {
+    color: var(--text-main);
+    font-size: 2.2rem;
+    font-weight: 500;
+    text-align: right;
+    word-break: break-all;
+    min-height: 2.5rem;
+}
+
+.currency-divider {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.currency-divider .icon-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+.exchange-rate-info {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 5px;
+}
+
+.currency-keypad {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* NLP Calculator Styles */
+#nlp-calc-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+#nlp-calc-view .nlp-display {
+    min-height: 120px;
+    margin-bottom: 20px;
+}
+
+.nlp-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: var(--btn-bg);
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.nlp-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nlp-tab.active {
+    background: var(--glass-bg);
+    color: var(--text-main);
+    box-shadow: var(--glass-shadow);
+}
+
+.nlp-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nlp-mode {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Mic Mode */
+.mic-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mic-btn {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    font-size: 3rem;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.mic-btn:hover {
+    transform: scale(1.05);
+}
+
+.mic-btn.listening {
+    color: var(--action-color);
+    border-color: var(--action-color);
+}
+
+.mic-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: var(--action-color);
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.mic-btn.listening + .mic-pulse {
+    animation: pulse 1.5s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+.nlp-status-text {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Keyboard Mode */
+.nlp-input-field {
+    width: 100%;
+    height: 180px;
+    resize: none;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    outline: none;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+}
+
+.nlp-input-field:focus {
+    border-color: var(--operator-color);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.nlp-calc-btn {
+    width: 100%;
+    padding: 15px 0;
+    font-size: 1.3rem;
+    border-radius: 20px;
 }

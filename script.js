@@ -218,8 +218,35 @@ document.querySelector('[data-action="delete"]').addEventListener('click', butto
     calculator.updateDisplay();
 });
 
+// Global active view tracker
+let activeView = 'basic';
+
 // Keyboard Support
 document.addEventListener('keydown', e => {
+    if (activeView === 'currency') {
+        // Currency Calculator Keyboard Support
+        if (e.key >= '0' && e.key <= '9' || e.key === '.') {
+            if (e.key === '.' && currentCurrencyValue.includes('.')) return;
+            if (currentCurrencyValue === '0' && e.key !== '.') {
+                currentCurrencyValue = e.key;
+            } else {
+                currentCurrencyValue += e.key;
+            }
+            updateCurrencyDisplay();
+        }
+        if (e.key === 'Backspace') {
+            currentCurrencyValue = currentCurrencyValue.slice(0, -1);
+            if (currentCurrencyValue === '') currentCurrencyValue = '0';
+            updateCurrencyDisplay();
+        }
+        if (e.key === 'Escape') {
+            currentCurrencyValue = '0';
+            updateCurrencyDisplay();
+        }
+        return; // Skip basic calc logic
+    }
+
+    // Basic Calculator Keyboard Support
     if (e.key >= '0' && e.key <= '9' || e.key === '.') {
         calculator.appendNumber(e.key);
         calculator.updateDisplay();
@@ -311,14 +338,309 @@ menuToggleBtn.addEventListener('click', toggleSidebar);
 closeSidebarBtn.addEventListener('click', toggleSidebar);
 sidebarOverlay.addEventListener('click', toggleSidebar);
 
-// Menu Item Click Logic (UI only for now)
+// Menu Item Click Logic (UI & View Switching)
+const basicCalcView = document.getElementById('basic-calc-view');
+const currencyCalcView = document.getElementById('currency-calc-view');
+const nlpCalcView = document.getElementById('nlp-calc-view');
+
 document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {
         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
-        // Close sidebar after selection on mobile
-        if (window.innerWidth <= 400) {
-            toggleSidebar();
+        
+        // Handle view switching
+        const view = item.getAttribute('data-view');
+        activeView = view;
+        if (view === 'basic') {
+            basicCalcView.style.display = 'flex';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+        } else if (view === 'currency') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'flex';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            initCurrencyCalc();
+        } else if (view === 'nlp') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'flex';
         }
+        
+        // Close sidebar after selection
+        toggleSidebar();
     });
 });
+
+// History Close Button
+const closeHistoryBtn = document.getElementById('close-history');
+if (closeHistoryBtn) {
+    closeHistoryBtn.addEventListener('click', () => {
+        historyPanel.classList.remove('active');
+    });
+}
+
+// Currency Calculator Logic
+let exchangeRates = null;
+let currentCurrencyValue = '0';
+let activeCurrencyRow = 'top';
+
+const topCurrencySelect = document.getElementById('currency-top-select');
+const bottomCurrencySelect = document.getElementById('currency-bottom-select');
+const topAmountDisplay = document.getElementById('currency-top-amount');
+const bottomAmountDisplay = document.getElementById('currency-bottom-amount');
+const rateInfoDisplay = document.getElementById('exchange-rate-info');
+const swapCurrencyBtn = document.getElementById('swap-currency');
+
+async function initCurrencyCalc() {
+    if (exchangeRates) return;
+    try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const data = await response.json();
+        exchangeRates = data.rates;
+        updateCurrencyDisplay();
+    } catch (error) {
+        console.error("Failed to fetch rates", error);
+        rateInfoDisplay.innerText = "환율 정보를 불러올 수 없습니다. (기본값 사용)";
+        exchangeRates = {
+            "USD": 1, "KRW": 1350, "EUR": 0.92, "JPY": 150, "CNY": 7.2, "VND": 25000, "THB": 36
+        };
+        updateCurrencyDisplay();
+    }
+}
+
+function updateCurrencyDisplay() {
+    if (!exchangeRates) return;
+    
+    const topCurrency = topCurrencySelect.value;
+    const bottomCurrency = bottomCurrencySelect.value;
+    
+    let topVal = 0;
+    let bottomVal = 0;
+    
+    if (activeCurrencyRow === 'top') {
+        topVal = parseFloat(currentCurrencyValue) || 0;
+        const inUSD = topVal / exchangeRates[topCurrency];
+        bottomVal = inUSD * exchangeRates[bottomCurrency];
+    } else {
+        bottomVal = parseFloat(currentCurrencyValue) || 0;
+        const inUSD = bottomVal / exchangeRates[bottomCurrency];
+        topVal = inUSD * exchangeRates[topCurrency];
+    }
+    
+    if (activeCurrencyRow === 'top') {
+        topAmountDisplay.innerText = currentCurrencyValue;
+        bottomAmountDisplay.innerText = formatCurrencyAmount(bottomVal);
+    } else {
+        topAmountDisplay.innerText = formatCurrencyAmount(topVal);
+        bottomAmountDisplay.innerText = currentCurrencyValue;
+    }
+    
+    const oneTopInBottom = (1 / exchangeRates[topCurrency]) * exchangeRates[bottomCurrency];
+    rateInfoDisplay.innerText = `1 ${topCurrency} = ${oneTopInBottom.toFixed(4)} ${bottomCurrency}`;
+}
+
+function formatCurrencyAmount(val) {
+    if (isNaN(val)) return '0';
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(val);
+}
+
+document.querySelectorAll('.currency-row').forEach((row, index) => {
+    row.addEventListener('click', (e) => {
+        if(e.target.tagName === 'SELECT') return; // Don't trigger if clicking select
+        document.querySelectorAll('.currency-row').forEach(r => r.classList.remove('active'));
+        row.classList.add('active');
+        activeCurrencyRow = index === 0 ? 'top' : 'bottom';
+        currentCurrencyValue = '0';
+        updateCurrencyDisplay();
+    });
+});
+
+if(topCurrencySelect) topCurrencySelect.addEventListener('change', updateCurrencyDisplay);
+if(bottomCurrencySelect) bottomCurrencySelect.addEventListener('change', updateCurrencyDisplay);
+
+if(swapCurrencyBtn) swapCurrencyBtn.addEventListener('click', () => {
+    const temp = topCurrencySelect.value;
+    topCurrencySelect.value = bottomCurrencySelect.value;
+    bottomCurrencySelect.value = temp;
+    updateCurrencyDisplay();
+});
+
+document.querySelectorAll('[data-curr-val]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-curr-val');
+        if (val === '.' && currentCurrencyValue.includes('.')) return;
+        if (currentCurrencyValue === '0' && val !== '.') {
+            currentCurrencyValue = val;
+        } else {
+            currentCurrencyValue += val;
+        }
+        updateCurrencyDisplay();
+    });
+});
+
+document.querySelectorAll('[data-curr-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const action = btn.getAttribute('data-curr-action');
+        if (action === 'clear') {
+            currentCurrencyValue = '0';
+        } else if (action === 'delete') {
+            currentCurrencyValue = currentCurrencyValue.slice(0, -1);
+            if (currentCurrencyValue === '') currentCurrencyValue = '0';
+        }
+        updateCurrencyDisplay();
+    });
+});
+
+// ==========================================
+// NLP Calculator Logic
+// ==========================================
+const nlpTabMic = document.getElementById('nlp-tab-mic');
+const nlpTabKbd = document.getElementById('nlp-tab-kbd');
+const nlpMicMode = document.getElementById('nlp-mic-mode');
+const nlpKbdMode = document.getElementById('nlp-kbd-mode');
+const nlpMicBtn = document.getElementById('nlp-mic-btn');
+const nlpStatus = document.getElementById('nlp-status');
+const nlpInput = document.getElementById('nlp-input');
+const nlpCalcBtn = document.getElementById('nlp-calc-btn');
+const nlpExpressionDisplay = document.getElementById('nlp-expression');
+const nlpResultDisplay = document.getElementById('nlp-result');
+
+if (nlpTabMic && nlpTabKbd) {
+    // Tab Switching
+    nlpTabMic.addEventListener('click', () => {
+        nlpTabMic.classList.add('active');
+        nlpTabKbd.classList.remove('active');
+        nlpMicMode.style.display = 'flex';
+        nlpKbdMode.style.display = 'none';
+    });
+
+    nlpTabKbd.addEventListener('click', () => {
+        nlpTabKbd.classList.add('active');
+        nlpTabMic.classList.remove('active');
+        nlpKbdMode.style.display = 'flex';
+        nlpMicMode.style.display = 'none';
+        nlpInput.focus();
+    });
+
+    // Speech Recognition setup
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'ko-KR';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+            nlpMicBtn.classList.add('listening');
+            nlpStatus.innerHTML = "듣고 있습니다... 말씀해 주세요.";
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+            nlpMicBtn.classList.remove('listening');
+            nlpStatus.innerHTML = "마이크 아이콘을 누르고 수식을 말해보세요.<br>(예: \"15 더하기 5는\")";
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            parseAndCalculateNLP(transcript);
+        };
+
+        recognition.onerror = (event) => {
+            nlpMicBtn.classList.remove('listening');
+            if (event.error === 'not-allowed') {
+                nlpStatus.innerHTML = "마이크 사용 권한이 거부되었거나, 로컬 파일(file://) 환경에서는 마이크를 사용할 수 없습니다.";
+            } else {
+                nlpStatus.innerHTML = "오류가 발생했습니다: " + event.error;
+            }
+            console.error('Speech recognition error', event.error);
+        };
+    } else {
+        nlpStatus.innerHTML = "이 브라우저에서는 음성 인식을 지원하지 않습니다.<br>키보드 모드를 사용해 주세요.";
+        nlpMicBtn.disabled = true;
+    }
+
+    nlpMicBtn.addEventListener('click', () => {
+        if (recognition) {
+            recognition.start();
+        }
+    });
+
+    // Keyboard Input Logic
+    nlpCalcBtn.addEventListener('click', () => {
+        parseAndCalculateNLP(nlpInput.value);
+    });
+    nlpInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            parseAndCalculateNLP(nlpInput.value);
+        }
+    });
+}
+
+// Parsing Logic
+function parseAndCalculateNLP(inputText) {
+    if (!inputText.trim()) return;
+    
+    // Show original input
+    nlpExpressionDisplay.innerText = inputText;
+    nlpResultDisplay.innerText = "...";
+
+    // 1. Map Korean keywords to math symbols
+    let expression = inputText
+        .replace(/더하기/g, '+')
+        .replace(/플러스/g, '+')
+        .replace(/빼기/g, '-')
+        .replace(/마이너스/g, '-')
+        .replace(/곱하기/g, '*')
+        .replace(/곱/g, '*')
+        .replace(/나누기/g, '/')
+        .replace(/나눔/g, '/')
+        .replace(/은/g, '')
+        .replace(/는/g, '')
+        .replace(/계산/g, '')
+        .replace(/해/g, '')
+        .replace(/줘/g, '')
+        .replace(/얼마/g, '')
+        .replace(/야/g, '')
+        .replace(/요/g, '')
+        .replace(/입/g, '')
+        .replace(/니/g, '')
+        .replace(/까/g, '')
+        .replace(/[?]/g, '');
+
+    // 2. Remove any remaining Korean characters, letters, spaces that aren't math
+    // Keep numbers, decimal points, and operators (+, -, *, /)
+    const sanitized = expression.replace(/[^0-9+\-*/.]/g, '');
+
+    if (!sanitized) {
+        nlpResultDisplay.innerText = "수식을 인식하지 못했습니다.";
+        return;
+    }
+
+    try {
+        // 3. Evaluate securely (eval is fine here since we heavily sanitized)
+        let result = new Function("return " + sanitized)();
+        
+        if (!isFinite(result) || isNaN(result)) {
+            throw new Error("Invalid calculation");
+        }
+
+        // Clean up float issues
+        result = Math.round(result * 10000000000) / 10000000000;
+        
+        // Display result
+        nlpResultDisplay.innerText = calculator.getDisplayNumber(result);
+        
+        // Add to history
+        calculator.addHistory(inputText + " =", result.toString());
+        
+        // Clear input for keyboard mode
+        if (nlpInput.value) {
+            nlpInput.value = '';
+        }
+    } catch (e) {
+        nlpResultDisplay.innerText = "계산 오류";
+    }
+}

@@ -35,43 +35,132 @@
                 </div>
             </div>
 
-            <div class="display">
-                <div id="previous-operand" class="previous-operand"></div>
-                <div id="current-operand" class="current-operand">0</div>
+            <div id="basic-calc-view">
+                <div class="display">
+                    <div id="previous-operand" class="previous-operand"></div>
+                    <div id="current-operand" class="current-operand">0</div>
+                </div>
+
+                <div class="keypad">
+                    <button class="btn btn-action" data-action="clear">AC</button>
+                    <button class="btn btn-action" data-action="delete"><i class="fas fa-backspace"></i></button>
+                    <button class="btn btn-operator" data-action="operator" data-value="%">%</button>
+                    <button class="btn btn-operator" data-action="operator" data-value="÷">÷</button>
+                    
+                    <button class="btn btn-number" data-value="7">7</button>
+                    <button class="btn btn-number" data-value="8">8</button>
+                    <button class="btn btn-number" data-value="9">9</button>
+                    <button class="btn btn-operator" data-action="operator" data-value="×">×</button>
+                    
+                    <button class="btn btn-number" data-value="4">4</button>
+                    <button class="btn btn-number" data-value="5">5</button>
+                    <button class="btn btn-number" data-value="6">6</button>
+                    <button class="btn btn-operator" data-action="operator" data-value="-">-</button>
+                    
+                    <button class="btn btn-number" data-value="1">1</button>
+                    <button class="btn btn-number" data-value="2">2</button>
+                    <button class="btn btn-number" data-value="3">3</button>
+                    <button class="btn btn-operator" data-action="operator" data-value="+">+</button>
+                    
+                    <button class="btn btn-number btn-zero" data-value="0">0</button>
+                    <button class="btn btn-number" data-value=".">.</button>
+                    <button class="btn btn-equals" data-action="calculate">=</button>
+                </div>
             </div>
 
-            <div class="keypad">
-                <button class="btn btn-action" data-action="clear">AC</button>
-                <button class="btn btn-action" data-action="delete"><i class="fas fa-backspace"></i></button>
-                <button class="btn btn-operator" data-action="operator" data-value="%">%</button>
-                <button class="btn btn-operator" data-action="operator" data-value="÷">÷</button>
-                
-                <button class="btn btn-number" data-value="7">7</button>
-                <button class="btn btn-number" data-value="8">8</button>
-                <button class="btn btn-number" data-value="9">9</button>
-                <button class="btn btn-operator" data-action="operator" data-value="×">×</button>
-                
-                <button class="btn btn-number" data-value="4">4</button>
-                <button class="btn btn-number" data-value="5">5</button>
-                <button class="btn btn-number" data-value="6">6</button>
-                <button class="btn btn-operator" data-action="operator" data-value="-">-</button>
-                
-                <button class="btn btn-number" data-value="1">1</button>
-                <button class="btn btn-number" data-value="2">2</button>
-                <button class="btn btn-number" data-value="3">3</button>
-                <button class="btn btn-operator" data-action="operator" data-value="+">+</button>
-                
-                <button class="btn btn-number btn-zero" data-value="0">0</button>
-                <button class="btn btn-number" data-value=".">.</button>
-                <button class="btn btn-equals" data-action="calculate">=</button>
+            <!-- Currency Calculator View -->
+            <div id="currency-calc-view" style="display: none;">
+                <div class="currency-display">
+                    <div class="currency-row top-currency active">
+                        <select id="currency-top-select" class="currency-select">
+                            <option value="KRW">KRW - 대한민국 원</option>
+                            <option value="USD" selected>USD - 미국 달러</option>
+                            <option value="EUR">EUR - 유로</option>
+                            <option value="JPY">JPY - 일본 엔</option>
+                            <option value="CNY">CNY - 중국 위안</option>
+                            <option value="VND">VND - 베트남 동</option>
+                            <option value="THB">THB - 태국 바트</option>
+                        </select>
+                        <div id="currency-top-amount" class="currency-amount">0</div>
+                    </div>
+                    <div class="currency-divider">
+                        <button id="swap-currency" class="icon-btn"><i class="fas fa-exchange-alt fa-rotate-90"></i></button>
+                    </div>
+                    <div class="currency-row bottom-currency">
+                        <select id="currency-bottom-select" class="currency-select">
+                            <option value="KRW" selected>KRW - 대한민국 원</option>
+                            <option value="USD">USD - 미국 달러</option>
+                            <option value="EUR">EUR - 유로</option>
+                            <option value="JPY">JPY - 일본 엔</option>
+                            <option value="CNY">CNY - 중국 위안</option>
+                            <option value="VND">VND - 베트남 동</option>
+                            <option value="THB">THB - 태국 바트</option>
+                        </select>
+                        <div id="currency-bottom-amount" class="currency-amount">0</div>
+                    </div>
+                    <div class="exchange-rate-info" id="exchange-rate-info">환율 정보 불러오는 중...</div>
+                </div>
+
+                <div class="keypad currency-keypad">
+                    <button class="btn btn-number" data-curr-val="7">7</button>
+                    <button class="btn btn-number" data-curr-val="8">8</button>
+                    <button class="btn btn-number" data-curr-val="9">9</button>
+                    <button class="btn btn-action" data-curr-action="delete"><i class="fas fa-backspace"></i></button>
+                    
+                    <button class="btn btn-number" data-curr-val="4">4</button>
+                    <button class="btn btn-number" data-curr-val="5">5</button>
+                    <button class="btn btn-number" data-curr-val="6">6</button>
+                    <button class="btn btn-action" data-curr-action="clear">AC</button>
+                    
+                    <button class="btn btn-number" data-curr-val="1">1</button>
+                    <button class="btn btn-number" data-curr-val="2">2</button>
+                    <button class="btn btn-number" data-curr-val="3">3</button>
+                    
+                    <!-- filler for grid -->
+                    <button class="btn" style="visibility: hidden; pointer-events: none;"></button>
+                    <button class="btn btn-number btn-zero" data-curr-val="0" style="grid-column: span 2">0</button>
+                    <button class="btn btn-number" data-curr-val="00">00</button>
+                    <button class="btn btn-number" data-curr-val=".">.</button>
+                </div>
+            </div>
+
+            <!-- Natural Language Calculator View -->
+            <div id="nlp-calc-view" style="display: none;">
+                <div class="display nlp-display">
+                    <div id="nlp-expression" class="previous-operand"></div>
+                    <div id="nlp-result" class="current-operand">0</div>
+                </div>
+
+                <div class="nlp-tabs">
+                    <button id="nlp-tab-mic" class="nlp-tab active"><i class="fas fa-microphone"></i> 음성</button>
+                    <button id="nlp-tab-kbd" class="nlp-tab"><i class="fas fa-keyboard"></i> 키보드</button>
+                </div>
+
+                <div class="nlp-content">
+                    <!-- Mic Mode -->
+                    <div id="nlp-mic-mode" class="nlp-mode active">
+                        <div class="mic-container">
+                            <button id="nlp-mic-btn" class="mic-btn"><i class="fas fa-microphone"></i></button>
+                            <div class="mic-pulse"></div>
+                        </div>
+                        <p id="nlp-status" class="nlp-status-text">마이크 아이콘을 누르고 수식을 말해보세요.<br>(예: "15 더하기 5는")</p>
+                    </div>
+
+                    <!-- Keyboard Mode -->
+                    <div id="nlp-kbd-mode" class="nlp-mode" style="display: none;">
+                        <textarea id="nlp-input" class="nlp-input-field" placeholder="수식을 입력하세요 (예: 15 더하기 5)"></textarea>
+                        <button id="nlp-calc-btn" class="btn btn-equals nlp-calc-btn">계산하기</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- History Panel -->
         <div class="history-panel" id="history-panel">
             <div class="history-header">
+                <button id="close-history" class="icon-btn" aria-label="Close history"><i class="fas fa-arrow-left"></i></button>
                 <h3>계산 기록</h3>
-                <button id="clear-history" class="icon-btn"><i class="fas fa-trash-alt"></i></button>
+                <button id="clear-history" class="icon-btn" aria-label="Clear history"><i class="fas fa-trash-alt"></i></button>
             </div>
             <div class="history-list" id="history-list">
                 <!-- 기록 항목들이 여기에 추가됩니다 -->
@@ -95,13 +184,14 @@
             <button id="close-sidebar" class="icon-btn"><i class="fas fa-times"></i></button>
         </div>
         <ul class="sidebar-menu">
-            <li class="menu-item active"><i class="fas fa-calculator"></i> 기본 계산기</li>
+            <li class="menu-item active" data-view="basic"><i class="fas fa-calculator"></i> 기본 계산기</li>
             <li class="menu-item"><i class="fas fa-square-root-alt"></i> 공학 계산기</li>
             <li class="menu-item"><i class="fas fa-ruler-combined"></i> 단위 계산기</li>
-            <li class="menu-item"><i class="fas fa-coins"></i> 환율 계산기</li>
+            <li class="menu-item" data-view="currency"><i class="fas fa-coins"></i> 환율 계산기</li>
             <li class="menu-item"><i class="fas fa-camera"></i> 사진 계산기</li>
             <li class="menu-item"><i class="fas fa-chart-bar"></i> 통계 계산기</li>
-            <li class="menu-item"><i class="fas fa-language"></i> 자연어 계산기</li>
+            <li class="menu-item" data-view="nlp"><i class="fas fa-language"></i> 자연어 계산기</li>
+            <li class="menu-item"><i class="fas fa-coins"></i> 팁 계산기</li>
             <li class="menu-item"><i class="fas fa-globe"></i> 행성별 무게 계산기</li>
         </ul>
     </div>

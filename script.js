@@ -246,6 +246,9 @@ document.addEventListener('keydown', e => {
         return; // Skip basic calc logic
     }
 
+    // NLP Calculator: skip basic calc key handling
+    if (activeView === 'nlp') return;
+
     // Basic Calculator Keyboard Support
     if (e.key >= '0' && e.key <= '9' || e.key === '.') {
         calculator.appendNumber(e.key);
@@ -590,6 +593,65 @@ if (nlpTabMic && nlpTabKbd) {
 }
 
 // Parsing Logic
+
+/**
+ * 한글 숫자 표현을 아라비아 숫자로 변환
+ * 예: "오십이" → "52", "삼백" → "300", "이만 오천" → "25000"
+ */
+function koreanNumberToArabic(text) {
+    const digits = { '영': 0, '공': 0, '일': 1, '이': 2, '삼': 3, '사': 4, '오': 5, '육': 6, '칠': 7, '팔': 8, '구': 9 };
+    const units  = { '십': 10, '백': 100, '천': 1000 };
+    const bigUnits = { '만': 10000, '억': 100000000 };
+
+    // 한글 숫자가 포함되어 있는지 확인
+    const korNumPattern = /[영공일이삼사오육칠팔구십백천만억]+/;
+    if (!korNumPattern.test(text)) return text;
+
+    function parseChunk(chunk) {
+        // 청크 내에서 숫자 계산 (만/억 이하 단위)
+        let total = 0;
+        let current = 0;
+        for (let i = 0; i < chunk.length; i++) {
+            const ch = chunk[i];
+            if (digits[ch] !== undefined) {
+                current = digits[ch];
+            } else if (units[ch] !== undefined) {
+                if (current === 0) current = 1; // 십 → 10, 백 → 100
+                total += current * units[ch];
+                current = 0;
+            }
+        }
+        total += current;
+        return total;
+    }
+
+    function convertKorNum(str) {
+        // 억 단위 분리
+        let result = 0;
+        const eok = str.split('억');
+        if (eok.length > 1) {
+            const eokPart = parseChunk(eok[0]);
+            result += eokPart * 100000000;
+            str = eok[1];
+        }
+        // 만 단위 분리
+        const man = str.split('만');
+        if (man.length > 1) {
+            const manPart = parseChunk(man[0]);
+            result += manPart * 10000;
+            str = man[1];
+        }
+        result += parseChunk(str);
+        return result;
+    }
+
+    // 한글 숫자 패턴 → 아라비아 숫자로 치환
+    return text.replace(/[영공일이삼사오육칠팔구십백천만억]+/g, (match) => {
+        const num = convertKorNum(match);
+        return isNaN(num) || num === 0 && !['영', '공'].includes(match) ? match : num.toString();
+    });
+}
+
 function parseAndCalculateNLP(inputText) {
     if (!inputText.trim()) return;
     
@@ -597,60 +659,68 @@ function parseAndCalculateNLP(inputText) {
     nlpExpressionDisplay.innerText = inputText;
     nlpResultDisplay.innerText = "...";
 
-    // 1. Map Korean keywords to math symbols
-    let expression = inputText
+    // 1. 한글 숫자를 아라비아 숫자로 먼저 변환
+    let expression = koreanNumberToArabic(inputText);
+
+    // 2. 연산자 키워드를 수학 기호로 변환 (긴 단어부터 먼저 처리)
+    expression = expression
         .replace(/더하기/g, '+')
         .replace(/플러스/g, '+')
         .replace(/빼기/g, '-')
         .replace(/마이너스/g, '-')
-        .replace(/곱하기/g, '*')
-        .replace(/곱/g, '*')
-        .replace(/나누기/g, '/')
+        .replace(/곱하기/g, '*')   // '곱하기' 먼저
+        .replace(/나누기/g, '/')   // '나누기' 먼저
         .replace(/나눔/g, '/')
-        .replace(/은/g, '')
-        .replace(/는/g, '')
-        .replace(/계산/g, '')
-        .replace(/해/g, '')
-        .replace(/줘/g, '')
-        .replace(/얼마/g, '')
-        .replace(/야/g, '')
-        .replace(/요/g, '')
-        .replace(/입/g, '')
-        .replace(/니/g, '')
-        .replace(/까/g, '')
-        .replace(/[?]/g, '');
+        .replace(/곱/g, '*')       // '곱' 나중에
+        .replace(/배/g, '*');
 
-    // 2. Remove any remaining Korean characters, letters, spaces that aren't math
-    // Keep numbers, decimal points, and operators (+, -, *, /)
-    const sanitized = expression.replace(/[^0-9+\-*/.]/g, '');
+    // 3. 불필요한 어미/조사/종결어 제거 (단어 경계 기준)
+    expression = expression
+        .replace(/얼마야|얼마요|얼마입니까|얼마예요|얼마에요/g, '')
+        .replace(/계산해줘|계산해|계산/g, '')
+        .replace(/알려줘|해줘|줘/g, '')
+        .replace(/이에요|예요|입니다|이야|이니|이까/g, '')
+        .replace(/는요|은요/g, '')
+        .replace(/[은는이가을를의]/g, '')
+        .replace(/[?？]/g, '');
+
+    // 4. 남은 한글 및 불필요한 문자 제거, 수식 문자만 남기기
+    const sanitized = expression.replace(/[^0-9+\-*/.]/g, '').trim();
 
     if (!sanitized) {
         nlpResultDisplay.innerText = "수식을 인식하지 못했습니다.";
         return;
     }
 
+    // 5. 수식이 올바른지 확인 (연산자로 끝나는 경우 등)
+    if (/[+\-*\/.]$/.test(sanitized)) {
+        nlpResultDisplay.innerText = "수식이 완전하지 않습니다.";
+        return;
+    }
+
     try {
-        // 3. Evaluate securely (eval is fine here since we heavily sanitized)
+        // 6. 안전하게 수식 계산
         let result = new Function("return " + sanitized)();
         
         if (!isFinite(result) || isNaN(result)) {
             throw new Error("Invalid calculation");
         }
 
-        // Clean up float issues
+        // 부동소수점 오차 제거
         result = Math.round(result * 10000000000) / 10000000000;
         
-        // Display result
+        // 결과 표시
         nlpResultDisplay.innerText = calculator.getDisplayNumber(result);
         
-        // Add to history
+        // 히스토리에 추가
         calculator.addHistory(inputText + " =", result.toString());
         
-        // Clear input for keyboard mode
-        if (nlpInput.value) {
+        // 키보드 모드의 경우 입력창 초기화
+        if (nlpInput && nlpInput.value) {
             nlpInput.value = '';
         }
     } catch (e) {
-        nlpResultDisplay.innerText = "계산 오류";
+        console.error('NLP 계산 오류:', e, '수식:', sanitized);
+        nlpResultDisplay.innerText = "계산 오류: " + sanitized + " 를 계산할 수 없습니다.";
     }
 }

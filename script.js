@@ -255,7 +255,11 @@ updateThemeIcon(savedTheme);
 
 themeToggleBtn.addEventListener('click', () => {
     const currentTheme = htmlEl.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    let newTheme;
+    if (currentTheme === 'dark') newTheme = 'light';
+    else if (currentTheme === 'light') newTheme = 'cute';
+    else newTheme = 'dark';
+    
     htmlEl.setAttribute('data-theme', newTheme);
     localStorage.setItem('calc-theme', newTheme);
     updateThemeIcon(newTheme);
@@ -264,6 +268,8 @@ themeToggleBtn.addEventListener('click', () => {
 function updateThemeIcon(theme) {
     if (theme === 'dark') {
         themeIcon.className = 'fas fa-sun'; // Show sun to toggle to light
+    } else if (theme === 'light') {
+        themeIcon.className = 'fas fa-paw'; // Show paw to toggle to cute
     } else {
         themeIcon.className = 'fas fa-moon'; // Show moon to toggle to dark
     }
@@ -288,4 +294,31 @@ document.getElementById('clear-history').addEventListener('click', () => {
     if(confirm("기록을 모두 지우시겠습니까?")) {
         calculator.clearHistory();
     }
+});
+
+// Sidebar Toggling
+const menuToggleBtn = document.getElementById('menu-toggle');
+const closeSidebarBtn = document.getElementById('close-sidebar');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    sidebarOverlay.classList.toggle('active');
+}
+
+menuToggleBtn.addEventListener('click', toggleSidebar);
+closeSidebarBtn.addEventListener('click', toggleSidebar);
+sidebarOverlay.addEventListener('click', toggleSidebar);
+
+// Menu Item Click Logic (UI only for now)
+document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        // Close sidebar after selection on mobile
+        if (window.innerWidth <= 400) {
+            toggleSidebar();
+        }
+    });
 });

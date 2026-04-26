@@ -22,12 +22,17 @@
     <div class="calculator-wrapper">
         <div class="calculator">
             <div class="top-bar">
-                <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
-                    <i class="fas fa-sun"></i>
+                <button id="menu-toggle" class="icon-btn" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
                 </button>
-                <button id="history-toggle" class="icon-btn" aria-label="Toggle history">
-                    <i class="fas fa-history"></i>
-                </button>
+                <div class="top-bar-right">
+                    <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                    <button id="history-toggle" class="icon-btn" aria-label="Toggle history">
+                        <i class="fas fa-history"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="display">
@@ -73,6 +78,32 @@
                 <div class="empty-history">기록이 없습니다.</div>
             </div>
         </div>
+        <!-- Cute Mode Decorations -->
+        <div class="cute-decorations">
+            <div class="deco deco-1">🐻</div>
+            <div class="deco deco-2">🐰</div>
+            <div class="deco deco-3">🐥</div>
+            <div class="deco deco-4">🐾</div>
+        </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>기능 선택</h2>
+            <button id="close-sidebar" class="icon-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item active"><i class="fas fa-calculator"></i> 기본 계산기</li>
+            <li class="menu-item"><i class="fas fa-square-root-alt"></i> 공학 계산기</li>
+            <li class="menu-item"><i class="fas fa-ruler-combined"></i> 단위 계산기</li>
+            <li class="menu-item"><i class="fas fa-coins"></i> 환율 계산기</li>
+            <li class="menu-item"><i class="fas fa-camera"></i> 사진 계산기</li>
+            <li class="menu-item"><i class="fas fa-chart-bar"></i> 통계 계산기</li>
+            <li class="menu-item"><i class="fas fa-language"></i> 자연어 계산기</li>
+            <li class="menu-item"><i class="fas fa-globe"></i> 행성별 무게 계산기</li>
+        </ul>
     </div>
 
     <script src="script.js"></script>

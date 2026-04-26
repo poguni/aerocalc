@@ -551,20 +551,29 @@ if (nlpTabMic && nlpTabKbd) {
         recognition.onerror = (event) => {
             nlpMicBtn.classList.remove('listening');
             if (event.error === 'not-allowed') {
-                nlpStatus.innerHTML = "마이크 사용 권한이 거부되었거나, 로컬 파일(file://) 환경에서는 마이크를 사용할 수 없습니다.";
+                nlpStatus.innerHTML = "마이크 권한이 차단되었습니다. 브라우저 주소창 옆의 자물쇠 아이콘을 눌러 마이크를 '허용'해 주세요.";
+            } else if (event.error === 'no-speech') {
+                nlpStatus.innerHTML = "음성이 감지되지 않았습니다. 마이크를 누르고 다시 말씀해 주세요.";
+            } else if (event.error === 'network') {
+                nlpStatus.innerHTML = "네트워크 연결이 불안정하여 음성 인식을 할 수 없습니다.";
             } else {
                 nlpStatus.innerHTML = "오류가 발생했습니다: " + event.error;
             }
             console.error('Speech recognition error', event.error);
         };
     } else {
-        nlpStatus.innerHTML = "이 브라우저에서는 음성 인식을 지원하지 않습니다.<br>키보드 모드를 사용해 주세요.";
+        nlpStatus.innerHTML = "이 브라우저에서는 음성 인식을 지원하지 않습니다.<br>구글 크롬(Chrome) 브라우저를 사용해 주세요.";
         nlpMicBtn.disabled = true;
     }
 
     nlpMicBtn.addEventListener('click', () => {
         if (recognition) {
-            recognition.start();
+            try {
+                recognition.start();
+            } catch (e) {
+                // Ignore error if already started
+                console.log("Recognition already started");
+            }
         }
     });
 
@@ -573,7 +582,8 @@ if (nlpTabMic && nlpTabKbd) {
         parseAndCalculateNLP(nlpInput.value);
     });
     nlpInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevent adding a new line in textarea
             parseAndCalculateNLP(nlpInput.value);
         }
     });

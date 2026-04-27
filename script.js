@@ -168,10 +168,18 @@ class Calculator {
         this.history.forEach(item => {
             const div = document.createElement('div');
             div.classList.add('history-item');
-            div.innerHTML = `
-                <div class="history-expr">${item.expression} =</div>
-                <div class="history-result">${this.getDisplayNumber(item.result)}</div>
-            `;
+            
+            const exprDiv = document.createElement('div');
+            exprDiv.classList.add('history-expr');
+            exprDiv.textContent = `${item.expression} =`;
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.classList.add('history-result');
+            resultDiv.textContent = this.getDisplayNumber(item.result);
+            
+            div.appendChild(exprDiv);
+            div.appendChild(resultDiv);
+
             div.addEventListener('click', () => {
                 this.currentOperand = item.result.toString();
                 this.operation = undefined;
@@ -788,8 +796,8 @@ function parseAndCalculateNLP(inputText) {
     }
 
     try {
-        // 6. 안전하게 수식 계산
-        let result = new Function("return " + sanitized)();
+        // 6. 안전하게 수식 계산 (math.js 활용)
+        let result = math.evaluate(sanitized);
         
         if (!isFinite(result) || isNaN(result)) {
             throw new Error("Invalid calculation");
@@ -1481,11 +1489,11 @@ if (statsBiCalcBtn) {
         speed: {
             name: '속도',
             units: {
-                'm/s':  { label: '미터매초(m/s)', factor: 1 },
-                'km/h': { label: '킬로미터매시(km/h)', factor: 1/3.6 },
-                'mph':  { label: '마일매시(mph)', factor: 0.44704 },
+                'm/s':  { label: '미터/초(m/s)', factor: 1 },
+                'km/h': { label: '킬로미터/시(km/h)', factor: 1/3.6 },
+                'mph':  { label: '마일/시(mph)', factor: 0.44704 },
                 'kn':   { label: '노트(kn)', factor: 0.514444 },
-                'ft/s': { label: '피트매초(ft/s)', factor: 0.3048 },
+                'ft/s': { label: '피트/초(ft/s)', factor: 0.3048 },
                 'mach': { label: '마하(Mach)', factor: 343 }
             }
         },

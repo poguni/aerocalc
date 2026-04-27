@@ -348,6 +348,9 @@ const nlpCalcView = document.getElementById('nlp-calc-view');
 const photoCalcView = document.getElementById('photo-calc-view');
 const planetCalcView = document.getElementById('planet-calc-view');
 const tipCalcView = document.getElementById('tip-calc-view');
+const statsCalcView = document.getElementById('stats-calc-view');
+const sciCalcView = document.getElementById('sci-calc-view');
+const unitCalcView = document.getElementById('unit-calc-view');
 
 document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -364,6 +367,9 @@ document.querySelectorAll('.menu-item').forEach(item => {
             if (photoCalcView) photoCalcView.style.display = 'none';
             if (planetCalcView) planetCalcView.style.display = 'none';
             if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
         } else if (view === 'currency') {
             basicCalcView.style.display = 'none';
             currencyCalcView.style.display = 'flex';
@@ -371,6 +377,9 @@ document.querySelectorAll('.menu-item').forEach(item => {
             if (photoCalcView) photoCalcView.style.display = 'none';
             if (planetCalcView) planetCalcView.style.display = 'none';
             if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
             initCurrencyCalc();
         } else if (view === 'nlp') {
             basicCalcView.style.display = 'none';
@@ -379,6 +388,9 @@ document.querySelectorAll('.menu-item').forEach(item => {
             if (photoCalcView) photoCalcView.style.display = 'none';
             if (planetCalcView) planetCalcView.style.display = 'none';
             if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
         } else if (view === 'photo') {
             basicCalcView.style.display = 'none';
             currencyCalcView.style.display = 'none';
@@ -386,6 +398,9 @@ document.querySelectorAll('.menu-item').forEach(item => {
             if (photoCalcView) photoCalcView.style.display = 'flex';
             if (planetCalcView) planetCalcView.style.display = 'none';
             if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
             calculateEV();
             calculateCrop();
         } else if (view === 'planet') {
@@ -395,6 +410,9 @@ document.querySelectorAll('.menu-item').forEach(item => {
             if (photoCalcView) photoCalcView.style.display = 'none';
             if (planetCalcView) planetCalcView.style.display = 'flex';
             if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
             calculatePlanetWeight();
             calculateEscapeVelocity();
         } else if (view === 'tip') {
@@ -404,7 +422,40 @@ document.querySelectorAll('.menu-item').forEach(item => {
             if (photoCalcView) photoCalcView.style.display = 'none';
             if (planetCalcView) planetCalcView.style.display = 'none';
             if (tipCalcView) tipCalcView.style.display = 'flex';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
             calculateTip();
+        } else if (view === 'stats') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'flex';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'none';
+        } else if (view === 'sci') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'flex';
+            if (unitCalcView) unitCalcView.style.display = 'none';
+        } else if (view === 'unit') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
+            if (statsCalcView) statsCalcView.style.display = 'none';
+            if (sciCalcView) sciCalcView.style.display = 'none';
+            if (unitCalcView) unitCalcView.style.display = 'flex';
         }
         
         // Close sidebar after selection
@@ -1003,3 +1054,576 @@ if (tipClearBtn) {
         calculateTip();
     });
 }
+
+// ==========================================
+// Stats Calculator Logic (Levity Stats)
+// ==========================================
+const statsTabUni = document.getElementById('stats-tab-uni');
+const statsTabBi = document.getElementById('stats-tab-bi');
+const statsUniMode = document.getElementById('stats-uni-mode');
+const statsBiMode = document.getElementById('stats-bi-mode');
+
+if (statsTabUni && statsTabBi) {
+    statsTabUni.addEventListener('click', () => {
+        statsTabUni.classList.add('active');
+        statsTabBi.classList.remove('active');
+        statsUniMode.style.display = 'block';
+        statsBiMode.style.display = 'none';
+    });
+    statsTabBi.addEventListener('click', () => {
+        statsTabBi.classList.add('active');
+        statsTabUni.classList.remove('active');
+        statsBiMode.style.display = 'block';
+        statsUniMode.style.display = 'none';
+    });
+}
+
+// Function to parse input data (string to array of numbers)
+function parseData(inputStr) {
+    if (!inputStr) return [];
+    return inputStr.replace(/,/g, ' ').split(/\s+/).map(Number).filter(n => !isNaN(n));
+}
+
+// Chart instances to destroy before redrawing
+let uniChartInstance = null;
+let biChartInstance = null;
+
+const getWittyMessage = (p_value, r_value) => {
+    if (p_value !== undefined && p_value !== null) {
+        if (p_value < 0.05) return "오, 통계적으로 유의미하네요! 우연이 아니라는 뜻입니다. (아마도요)";
+        else return "이 데이터들은 서로 별로 관심이 없는 것 같군요. (p > 0.05)";
+    }
+    if (r_value !== undefined && r_value !== null) {
+        if (Math.abs(r_value) > 0.8) return "둘의 관계가 거의 껌딱지 수준입니다! 엄청난 양의 상관관계네요.";
+    }
+    return "숫자들은 거짓말을 하지 않죠. 그저 복잡하게 말할 뿐입니다.";
+};
+
+const statsUniCalcBtn = document.getElementById('stats-uni-calc-btn');
+if (statsUniCalcBtn) {
+    statsUniCalcBtn.addEventListener('click', async () => {
+        const inputDataStr = document.getElementById('stats-uni-input').value;
+        const fileInput = document.getElementById('stats-uni-file').files[0];
+        
+        let data = [];
+        if (fileInput) {
+            const text = await fileInput.text();
+            data = parseData(text);
+        } else if (inputDataStr) {
+            data = parseData(inputDataStr);
+        } else {
+            alert('데이터를 입력하거나 CSV 파일을 업로드해 주세요.');
+            return;
+        }
+            
+        if (data.length < 2) {
+            alert('분석을 위해 최소 2개 이상의 숫자가 필요합니다.');
+            return;
+        }
+
+        // Calculate stats using jStat
+        const mean = jStat.mean(data);
+        const median = jStat.median(data);
+        const std = jStat.stdev(data, true); // sample standard deviation
+        const variance = jStat.variance(data, true);
+        const sem = std / Math.sqrt(data.length);
+
+        document.getElementById('stats-uni-result').style.display = 'block';
+        document.getElementById('stats-uni-mean').innerText = mean.toFixed(4);
+        document.getElementById('stats-uni-median').innerText = median.toFixed(4);
+        document.getElementById('stats-uni-std').innerText = std.toFixed(4);
+        document.getElementById('stats-uni-var').innerText = variance.toFixed(4);
+        document.getElementById('stats-uni-sem').innerText = sem.toFixed(4);
+        document.getElementById('stats-uni-msg').innerText = getWittyMessage();
+        
+        // Draw Histogram with Chart.js
+        const ctx = document.getElementById('stats-uni-plot').getContext('2d');
+        if (uniChartInstance) uniChartInstance.destroy();
+        
+        // Create bins for histogram manually
+        const min = jStat.min(data);
+        const max = jStat.max(data);
+        const binCount = Math.max(5, Math.floor(Math.sqrt(data.length)));
+        const binWidth = (max - min) / binCount || 1;
+        
+        let bins = Array(binCount).fill(0);
+        let labels = Array(binCount).fill('');
+        for (let i = 0; i < binCount; i++) {
+            labels[i] = (min + (i * binWidth)).toFixed(1) + ' ~ ' + (min + ((i+1) * binWidth)).toFixed(1);
+        }
+        
+        data.forEach(val => {
+            let idx = Math.floor((val - min) / binWidth);
+            if (idx >= binCount) idx = binCount - 1;
+            bins[idx]++;
+        });
+
+        uniChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Frequency',
+                    data: bins,
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { ticks: { color: '#e2e8f0', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#e2e8f0' } }
+                }
+            }
+        });
+    });
+}
+
+const statsBiCalcBtn = document.getElementById('stats-bi-calc-btn');
+if (statsBiCalcBtn) {
+    statsBiCalcBtn.addEventListener('click', () => {
+        const inputA = document.getElementById('stats-bi-input-a').value;
+        const inputB = document.getElementById('stats-bi-input-b').value;
+        
+        let dataA = parseData(inputA);
+        let dataB = parseData(inputB);
+        
+        if (dataA.length < 2 || dataB.length < 2) {
+            alert('Group A와 Group B의 데이터를 2개 이상 입력해 주세요.');
+            return;
+        }
+        
+        const minLen = Math.min(dataA.length, dataB.length);
+        dataA = dataA.slice(0, minLen);
+        dataB = dataB.slice(0, minLen);
+
+        // Correlation
+        const r_val = jStat.corrcoeff(dataA, dataB);
+        // t-value for correlation
+        const t_val_r = r_val * Math.sqrt((minLen - 2) / (1 - r_val * r_val));
+        const p_val_r = jStat.studentt.cdf(-Math.abs(t_val_r), minLen - 2) * 2;
+
+        // Independent t-test (assuming equal variance for simplicity)
+        const meanA = jStat.mean(dataA);
+        const meanB = jStat.mean(dataB);
+        const varA = jStat.variance(dataA, true);
+        const varB = jStat.variance(dataB, true);
+        const pooledVar = ((minLen - 1) * varA + (minLen - 1) * varB) / (2 * minLen - 2);
+        const se = Math.sqrt(pooledVar * (2 / minLen));
+        const t_val = (meanA - meanB) / se;
+        const df = 2 * minLen - 2;
+        const p_val_t = jStat.studentt.cdf(-Math.abs(t_val), df) * 2;
+
+        document.getElementById('stats-bi-result').style.display = 'block';
+        document.getElementById('stats-bi-r').innerText = r_val.toFixed(4);
+        document.getElementById('stats-bi-rp').innerText = p_val_r.toFixed(4);
+        document.getElementById('stats-bi-t').innerText = t_val.toFixed(4);
+        document.getElementById('stats-bi-tp').innerText = p_val_t.toFixed(4);
+        
+        let msg = getWittyMessage(p_val_t, null);
+        if (p_val_t > 0.05 && Math.abs(r_val) > 0.8) msg = getWittyMessage(null, r_val);
+        document.getElementById('stats-bi-msg').innerText = msg;
+
+        // Draw Scatter Plot with Chart.js
+        const ctx = document.getElementById('stats-bi-plot').getContext('2d');
+        if (biChartInstance) biChartInstance.destroy();
+        
+        const scatterData = [];
+        for (let i = 0; i < minLen; i++) {
+            scatterData.push({ x: dataA[i], y: dataB[i] });
+        }
+
+        biChartInstance = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Group A vs B',
+                    data: scatterData,
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Group A', color: '#e2e8f0' }, ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { title: { display: true, text: 'Group B', color: '#e2e8f0' }, ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#e2e8f0' } }
+                }
+            }
+        });
+    });
+}
+
+// ==========================================
+// Scientific Calculator Logic (Math.js)
+// ==========================================
+(function initSciCalc() {
+    const sciExpr = document.getElementById('sci-expression');
+    const sciPreview = document.getElementById('sci-preview');
+    const sciClear = document.getElementById('sci-clear');
+    const sciEqual = document.getElementById('sci-equal');
+    const sciToast = document.getElementById('sci-toast');
+    if (!sciExpr || !sciPreview) return;
+
+    let sciExpression = '';
+    let flyActive = false;
+
+    // Live preview: evaluate as user types
+    function updatePreview() {
+        sciExpression = sciExpr.innerText.trim();
+        if (!sciExpression) {
+            sciPreview.textContent = '= ?';
+            sciPreview.classList.remove('error');
+            return;
+        }
+
+        // Fly easter egg detection
+        if (sciExpression.toLowerCase().includes('fly') && !flyActive) {
+            triggerFly();
+            return;
+        }
+
+        try {
+            const result = math.evaluate(sciExpression);
+            if (typeof result === 'function' || result === undefined) {
+                sciPreview.textContent = '= ?';
+                sciPreview.classList.remove('error');
+            } else {
+                const formatted = typeof result === 'number'
+                    ? (Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(10)).toString())
+                    : result.toString();
+                sciPreview.textContent = '= ' + formatted;
+                sciPreview.classList.remove('error');
+            }
+        } catch (e) {
+            sciPreview.textContent = '= ?';
+            sciPreview.classList.remove('error');
+        }
+    }
+
+    // Insert text at cursor inside contenteditable
+    function insertAtCursor(text) {
+        sciExpr.focus();
+        document.execCommand('insertText', false, text);
+        updatePreview();
+    }
+
+    // Button clicks
+    document.querySelectorAll('.sci-btn[data-val]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (flyActive) return;
+            insertAtCursor(btn.getAttribute('data-val'));
+        });
+    });
+
+    // AC button
+    if (sciClear) {
+        sciClear.addEventListener('click', () => {
+            sciExpr.innerText = '';
+            sciExpression = '';
+            sciPreview.textContent = '= ?';
+            sciPreview.classList.remove('error');
+            if (flyActive) resetFly();
+        });
+    }
+
+    // Equal button: finalize result
+    if (sciEqual) {
+        sciEqual.addEventListener('click', () => {
+            if (flyActive) return;
+            sciExpression = sciExpr.innerText.trim();
+            if (!sciExpression) return;
+            try {
+                const result = math.evaluate(sciExpression);
+                if (typeof result === 'function' || result === undefined) return;
+                const formatted = typeof result === 'number'
+                    ? (Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(10)).toString())
+                    : result.toString();
+                sciPreview.textContent = '= ' + formatted;
+                sciPreview.classList.remove('error');
+                sciExpr.innerText = formatted;
+                // Move cursor to end
+                const range = document.createRange();
+                const sel = window.getSelection();
+                range.selectNodeContents(sciExpr);
+                range.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } catch (e) {
+                sciPreview.textContent = '❌ ' + e.message;
+                sciPreview.classList.add('error');
+            }
+        });
+    }
+
+    // Listen to typing in the expression box
+    sciExpr.addEventListener('input', updatePreview);
+
+    // Handle Enter key as equals
+    sciExpr.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (sciEqual) sciEqual.click();
+        }
+    });
+
+    // ---- Fly Easter Egg ----
+    function triggerFly() {
+        flyActive = true;
+        const allBtns = document.querySelectorAll('.sci-btn');
+        allBtns.forEach(btn => {
+            const yDist = -(200 + Math.random() * 400);
+            const xDist = (Math.random() - 0.5) * 300;
+            const rot = (Math.random() - 0.5) * 720;
+            btn.style.setProperty('--fly-y', yDist + 'px');
+            btn.style.setProperty('--fly-x', xDist + 'px');
+            btn.style.setProperty('--fly-rot', rot + 'deg');
+            btn.style.animationDelay = (Math.random() * 0.6) + 's';
+            btn.classList.add('flying');
+        });
+
+        sciPreview.textContent = '🚀 import antigravity';
+        sciPreview.classList.remove('error');
+
+        if (sciToast) {
+            sciToast.classList.add('show');
+            setTimeout(() => sciToast.classList.remove('show'), 3000);
+        }
+    }
+
+    function resetFly() {
+        flyActive = false;
+        const allBtns = document.querySelectorAll('.sci-btn');
+        allBtns.forEach(btn => {
+            btn.classList.remove('flying');
+            btn.style.animationDelay = '';
+        });
+    }
+})();
+
+// ==========================================
+// Unit Converter Logic
+// ==========================================
+(function initUnitConverter() {
+    const unitData = {
+        length: {
+            name: '길이',
+            units: {
+                'mm': { label: '밀리미터(mm)', factor: 0.001 },
+                'cm': { label: '센티미터(cm)', factor: 0.01 },
+                'm':  { label: '미터(m)', factor: 1 },
+                'km': { label: '킬로미터(km)', factor: 1000 },
+                'in': { label: '인치(in)', factor: 0.0254 },
+                'ft': { label: '피트(ft)', factor: 0.3048 },
+                'yd': { label: '야드(yd)', factor: 0.9144 },
+                'mi': { label: '마일(mi)', factor: 1609.344 }
+            }
+        },
+        area: {
+            name: '면적',
+            units: {
+                'mm²': { label: '제곱밀리미터(mm²)', factor: 1e-6 },
+                'cm²': { label: '제곱센티미터(cm²)', factor: 1e-4 },
+                'm²':  { label: '제곱미터(m²)', factor: 1 },
+                'km²': { label: '제곱킬로미터(km²)', factor: 1e6 },
+                'ha':  { label: '헥타르(ha)', factor: 10000 },
+                'ac':  { label: '에이커(ac)', factor: 4046.856 },
+                '평':  { label: '평(坪)', factor: 3.305785 },
+                'ft²': { label: '제곱피트(ft²)', factor: 0.092903 }
+            }
+        },
+        weight: {
+            name: '무게',
+            units: {
+                'mg': { label: '밀리그램(mg)', factor: 1e-6 },
+                'g':  { label: '그램(g)', factor: 0.001 },
+                'kg': { label: '킬로그램(kg)', factor: 1 },
+                't':  { label: '톤(t)', factor: 1000 },
+                'oz': { label: '온스(oz)', factor: 0.028349523 },
+                'lb': { label: '파운드(lb)', factor: 0.45359237 },
+                '근': { label: '근(斤)', factor: 0.6 }
+            }
+        },
+        volume: {
+            name: '부피',
+            units: {
+                'mL': { label: '밀리리터(mL)', factor: 0.001 },
+                'L':  { label: '리터(L)', factor: 1 },
+                'cm³': { label: '세제곱센티미터(㎤)', factor: 0.001 },
+                'm³': { label: '세제곱미터(m³)', factor: 1000 },
+                'gal': { label: '갤런(gal)', factor: 3.78541 },
+                'qt': { label: '쿼트(qt)', factor: 0.946353 },
+                'pt': { label: '파인트(pt)', factor: 0.473176 },
+                'cup': { label: '컵(cup)', factor: 0.236588 },
+                'fl oz': { label: '액량온스(fl oz)', factor: 0.0295735 }
+            }
+        },
+        temp: {
+            name: '온도',
+            units: {
+                '°C': { label: '섭씨(°C)' },
+                '°F': { label: '화씨(°F)' },
+                'K':  { label: '켈빈(K)' }
+            },
+            custom: true
+        },
+        speed: {
+            name: '속도',
+            units: {
+                'm/s':  { label: '미터매초(m/s)', factor: 1 },
+                'km/h': { label: '킬로미터매시(km/h)', factor: 1/3.6 },
+                'mph':  { label: '마일매시(mph)', factor: 0.44704 },
+                'kn':   { label: '노트(kn)', factor: 0.514444 },
+                'ft/s': { label: '피트매초(ft/s)', factor: 0.3048 },
+                'mach': { label: '마하(Mach)', factor: 343 }
+            }
+        },
+        time: {
+            name: '시간',
+            units: {
+                'ms':  { label: '밀리초(ms)', factor: 0.001 },
+                's':   { label: '초(s)', factor: 1 },
+                'min': { label: '분(min)', factor: 60 },
+                'hr':  { label: '시간(hr)', factor: 3600 },
+                'day': { label: '일(day)', factor: 86400 },
+                'wk':  { label: '주(wk)', factor: 604800 },
+                'mo':  { label: '월(mo)', factor: 2592000 },
+                'yr':  { label: '년(yr)', factor: 31536000 }
+            }
+        },
+        data: {
+            name: '데이터',
+            units: {
+                'B':  { label: '바이트(B)', factor: 1 },
+                'KB': { label: '킬로바이트(KB)', factor: 1024 },
+                'MB': { label: '메가바이트(MB)', factor: 1048576 },
+                'GB': { label: '기가바이트(GB)', factor: 1073741824 },
+                'TB': { label: '테라바이트(TB)', factor: 1099511627776 },
+                'bit': { label: '비트(bit)', factor: 0.125 },
+                'Kbit': { label: '킬로비트(Kbit)', factor: 128 },
+                'Mbit': { label: '메가비트(Mbit)', factor: 131072 }
+            }
+        }
+    };
+
+    // Temperature conversion (special case)
+    function convertTemp(val, from, to) {
+        if (from === to) return val;
+        let celsius;
+        if (from === '°C') celsius = val;
+        else if (from === '°F') celsius = (val - 32) * 5/9;
+        else celsius = val - 273.15; // K
+
+        if (to === '°C') return celsius;
+        if (to === '°F') return celsius * 9/5 + 32;
+        return celsius + 273.15; // K
+    }
+
+    const fromSelect = document.getElementById('unit-from-select');
+    const toSelect = document.getElementById('unit-to-select');
+    const fromValue = document.getElementById('unit-from-value');
+    const toValue = document.getElementById('unit-to-value');
+    const swapBtn = document.getElementById('unit-swap-btn');
+    if (!fromSelect || !toSelect) return;
+
+    let currentCategory = 'length';
+    let inputStr = '0';
+
+    function populateSelects(cat) {
+        const units = unitData[cat].units;
+        fromSelect.innerHTML = '';
+        toSelect.innerHTML = '';
+        const keys = Object.keys(units);
+        keys.forEach((key, i) => {
+            const o1 = document.createElement('option');
+            o1.value = key; o1.textContent = units[key].label;
+            fromSelect.appendChild(o1);
+            const o2 = document.createElement('option');
+            o2.value = key; o2.textContent = units[key].label;
+            toSelect.appendChild(o2);
+        });
+        if (keys.length > 1) toSelect.selectedIndex = 1;
+    }
+
+    function convert() {
+        const val = parseFloat(inputStr) || 0;
+        const from = fromSelect.value;
+        const to = toSelect.value;
+        const cat = unitData[currentCategory];
+        let result;
+        if (cat.custom) {
+            result = convertTemp(val, from, to);
+        } else {
+            const fromFactor = cat.units[from].factor;
+            const toFactor = cat.units[to].factor;
+            result = val * fromFactor / toFactor;
+        }
+        fromValue.textContent = inputStr;
+        const formatted = Number.isInteger(result) ? result.toString() : parseFloat(result.toPrecision(10)).toString();
+        toValue.textContent = formatted;
+    }
+
+    // Category tab click
+    document.querySelectorAll('.unit-cat').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.unit-cat').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.getAttribute('data-cat');
+            inputStr = '0';
+            populateSelects(currentCategory);
+            convert();
+        });
+    });
+
+    // Select change
+    fromSelect.addEventListener('change', convert);
+    toSelect.addEventListener('change', convert);
+
+    // Swap button
+    if (swapBtn) {
+        swapBtn.addEventListener('click', () => {
+            const tmp = fromSelect.selectedIndex;
+            fromSelect.selectedIndex = toSelect.selectedIndex;
+            toSelect.selectedIndex = tmp;
+            convert();
+        });
+    }
+
+    // Numpad
+    document.querySelectorAll('.unit-key').forEach(key => {
+        key.addEventListener('click', () => {
+            const k = key.getAttribute('data-key');
+            if (k === 'clear') {
+                inputStr = '0';
+            } else if (k === 'backspace') {
+                inputStr = inputStr.slice(0, -1);
+                if (!inputStr || inputStr === '-') inputStr = '0';
+            } else if (k === 'negate') {
+                if (inputStr.startsWith('-')) inputStr = inputStr.slice(1);
+                else if (inputStr !== '0') inputStr = '-' + inputStr;
+            } else if (k === '.') {
+                if (!inputStr.includes('.')) inputStr += '.';
+            } else {
+                // digits: 0-9, 00, 000
+                if (inputStr === '0') inputStr = k;
+                else inputStr += k;
+            }
+            convert();
+        });
+    });
+
+    // Initialize
+    populateSelects(currentCategory);
+    convert();
+})();

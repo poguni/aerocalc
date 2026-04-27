@@ -8,9 +8,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Pretendard (Korean clarity font) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
     <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <!-- jStat for Statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.6/dist/jstat.min.js"></script>
+    <!-- Chart.js for Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Math.js for Scientific Calculator -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.1/lib/browser/math.min.js"></script>
 </head>
 <body>
     <div class="background-shapes">
@@ -356,6 +364,176 @@
                     <i class="fas fa-undo"></i> 초기화 (Clear)
                 </button>
             </div>
+
+            <!-- Stats Calculator View -->
+            <div id="stats-calc-view" style="display: none; flex-direction: column; flex-grow: 1; min-height: 0;">
+                <div class="photo-tabs" style="flex-shrink: 0;">
+                    <button id="stats-tab-uni" class="photo-tab active"><i class="fas fa-chart-bar"></i> 단일 변량</button>
+                    <button id="stats-tab-bi" class="photo-tab"><i class="fas fa-project-diagram"></i> 비교(이변량)</button>
+                </div>
+                
+                <div class="photo-content" style="overflow-y: auto; flex: 1; min-height: 0; padding-right: 10px; margin-right: -10px;">
+                    <!-- Univariate Mode -->
+                    <div id="stats-uni-mode" class="photo-mode active" style="height: auto;">
+                        <div class="photo-input-group">
+                            <label>데이터 입력 (공백/콤마 구분) 또는 CSV 업로드</label>
+                            <textarea id="stats-uni-input" class="photo-input" rows="3" placeholder="예: 10, 20, 30, 40, 50" style="resize: vertical;"></textarea>
+                            <input type="file" id="stats-uni-file" accept=".csv" style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem;">
+                        </div>
+                        <button id="stats-uni-calc-btn" class="tip-btn active" style="width: 100%; margin-top: 15px; margin-bottom: 15px;">계산하기</button>
+                        
+                        <div id="stats-uni-result" style="display: none;">
+                            <div class="tip-summary-panel">
+                                <div class="tip-summary-row"><span>평균 (Mean)</span><span id="stats-uni-mean">-</span></div>
+                                <div class="tip-summary-row"><span>중앙값 (Median)</span><span id="stats-uni-median">-</span></div>
+                                <div class="tip-summary-row"><span>분산 (Variance)</span><span id="stats-uni-var">-</span></div>
+                                <div class="tip-summary-row"><span>표준편차 (Std Dev)</span><span id="stats-uni-std">-</span></div>
+                                <div class="tip-summary-row"><span>표준오차 (SEM)</span><span id="stats-uni-sem">-</span></div>
+                            </div>
+                            <div style="width: 100%; margin-top: 15px; border-radius: 10px; background: rgba(0,0,0,0.2); padding: 10px; box-sizing: border-box;">
+                                <canvas id="stats-uni-plot"></canvas>
+                            </div>
+                            <div id="stats-uni-msg" style="margin-top: 15px; padding: 10px; text-align: center; color: var(--text-main); font-style: italic;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Bivariate Mode -->
+                    <div id="stats-bi-mode" class="photo-mode" style="display: none; height: auto;">
+                        <div class="photo-input-group">
+                            <label>Group A 데이터</label>
+                            <textarea id="stats-bi-input-a" class="photo-input" rows="2" placeholder="예: 1 2 3 4 5" style="resize: vertical;"></textarea>
+                        </div>
+                        <div class="photo-input-group">
+                            <label>Group B 데이터</label>
+                            <textarea id="stats-bi-input-b" class="photo-input" rows="2" placeholder="예: 2 4 6 8 10" style="resize: vertical;"></textarea>
+                        </div>
+                        <button id="stats-bi-calc-btn" class="tip-btn active" style="width: 100%; margin-top: 15px; margin-bottom: 15px;">비교 분석하기</button>
+
+                        <div id="stats-bi-result" style="display: none;">
+                            <div class="tip-summary-panel">
+                                <div class="tip-summary-row"><span>피어슨 상관계수 (r)</span><span id="stats-bi-r">-</span></div>
+                                <div class="tip-summary-row"><span>상관 p-value</span><span id="stats-bi-rp">-</span></div>
+                                <div class="tip-summary-row"><span>t-검정 통계량 (t)</span><span id="stats-bi-t">-</span></div>
+                                <div class="tip-summary-row"><span>t-검정 p-value</span><span id="stats-bi-tp">-</span></div>
+                            </div>
+                            <div style="width: 100%; margin-top: 15px; border-radius: 10px; background: rgba(0,0,0,0.2); padding: 10px; box-sizing: border-box;">
+                                <canvas id="stats-bi-plot"></canvas>
+                            </div>
+                            <div id="stats-bi-msg" style="margin-top: 15px; padding: 10px; text-align: center; color: var(--text-main); font-style: italic;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scientific Calculator View -->
+            <div id="sci-calc-view" style="display: none; flex-direction: column; flex-grow: 1; min-height: 0;">
+                <!-- Expression Display -->
+                <div class="sci-display">
+                    <div class="sci-expression" id="sci-expression" contenteditable="true" spellcheck="false" placeholder="수식을 입력하세요..."></div>
+                    <div class="sci-preview" id="sci-preview">= ?</div>
+                </div>
+                <!-- Button Grid -->
+                <div class="sci-grid">
+                    <button class="sci-btn sci-fn" data-val="sin(">sin</button>
+                    <button class="sci-btn sci-fn" data-val="cos(">cos</button>
+                    <button class="sci-btn sci-fn" data-val="tan(">tan</button>
+                    <button class="sci-btn sci-fn" data-val="log(">log</button>
+
+                    <button class="sci-btn sci-fn" data-val="asin(">sin⁻¹</button>
+                    <button class="sci-btn sci-fn" data-val="acos(">cos⁻¹</button>
+                    <button class="sci-btn sci-fn" data-val="atan(">tan⁻¹</button>
+                    <button class="sci-btn sci-fn" data-val="log10(">log₁₀</button>
+
+                    <button class="sci-btn sci-fn" data-val="sqrt(">√</button>
+                    <button class="sci-btn sci-fn" data-val="^">xʸ</button>
+                    <button class="sci-btn sci-fn" data-val="pi">π</button>
+                    <button class="sci-btn sci-fn" data-val="e">e</button>
+
+                    <button class="sci-btn sci-fn" data-val="abs(">|x|</button>
+                    <button class="sci-btn sci-fn" data-val="factorial(">n!</button>
+                    <button class="sci-btn sci-op" data-val="(">(</button>
+                    <button class="sci-btn sci-op" data-val=")">)</button>
+
+                    <button class="sci-btn sci-num" data-val="7">7</button>
+                    <button class="sci-btn sci-num" data-val="8">8</button>
+                    <button class="sci-btn sci-num" data-val="9">9</button>
+                    <button class="sci-btn sci-op" data-val="/">÷</button>
+
+                    <button class="sci-btn sci-num" data-val="4">4</button>
+                    <button class="sci-btn sci-num" data-val="5">5</button>
+                    <button class="sci-btn sci-num" data-val="6">6</button>
+                    <button class="sci-btn sci-op" data-val="*">×</button>
+
+                    <button class="sci-btn sci-num" data-val="1">1</button>
+                    <button class="sci-btn sci-num" data-val="2">2</button>
+                    <button class="sci-btn sci-num" data-val="3">3</button>
+                    <button class="sci-btn sci-op" data-val="-">−</button>
+
+                    <button class="sci-btn sci-num" data-val="0">0</button>
+                    <button class="sci-btn sci-num" data-val=".">.</button>
+                    <button class="sci-btn sci-action" id="sci-clear">AC</button>
+                    <button class="sci-btn sci-op" data-val="+">+</button>
+
+                    <button class="sci-btn sci-equal" id="sci-equal" style="grid-column: span 4;">=</button>
+                </div>
+                <!-- Fly easter-egg toast -->
+                <div class="sci-toast" id="sci-toast">🚀 Antigravity activated!</div>
+            </div>
+
+            <!-- Unit Converter View -->
+            <div id="unit-calc-view" style="display: none; flex-direction: column; flex-grow: 1; min-height: 0;">
+                <!-- Category Tabs -->
+                <div class="unit-cat-bar">
+                    <button class="unit-cat active" data-cat="length"><i class="fas fa-ruler"></i> 길이</button>
+                    <button class="unit-cat" data-cat="area"><i class="fas fa-vector-square"></i> 면적</button>
+                    <button class="unit-cat" data-cat="weight"><i class="fas fa-weight-hanging"></i> 무게</button>
+                    <button class="unit-cat" data-cat="volume"><i class="fas fa-flask"></i> 부피</button>
+                    <button class="unit-cat" data-cat="temp"><i class="fas fa-thermometer-half"></i> 온도</button>
+                    <button class="unit-cat" data-cat="speed"><i class="fas fa-tachometer-alt"></i> 속도</button>
+                    <button class="unit-cat" data-cat="time"><i class="fas fa-clock"></i> 시간</button>
+                    <button class="unit-cat" data-cat="data"><i class="fas fa-database"></i> 데이터</button>
+                </div>
+
+                <!-- Conversion Display -->
+                <div class="unit-display-area">
+                    <div class="unit-row">
+                        <select id="unit-from-select" class="unit-select"></select>
+                        <div class="unit-value" id="unit-from-value">0</div>
+                    </div>
+                    <div style="text-align: center; padding: 6px 0;">
+                        <button id="unit-swap-btn" class="icon-btn" style="font-size: 1.2rem; color: var(--action-color);">
+                            <i class="fas fa-exchange-alt" style="transform: rotate(90deg);"></i>
+                        </button>
+                    </div>
+                    <div class="unit-row">
+                        <select id="unit-to-select" class="unit-select"></select>
+                        <div class="unit-value unit-result" id="unit-to-value">0</div>
+                    </div>
+                </div>
+
+                <!-- Numpad -->
+                <div class="unit-numpad">
+                    <button class="unit-key" data-key="7">7</button>
+                    <button class="unit-key" data-key="8">8</button>
+                    <button class="unit-key" data-key="9">9</button>
+                    <button class="unit-key unit-key-fn" data-key="backspace"><i class="fas fa-backspace"></i></button>
+
+                    <button class="unit-key" data-key="4">4</button>
+                    <button class="unit-key" data-key="5">5</button>
+                    <button class="unit-key" data-key="6">6</button>
+                    <button class="unit-key unit-key-fn" data-key="clear">AC</button>
+
+                    <button class="unit-key" data-key="1">1</button>
+                    <button class="unit-key" data-key="2">2</button>
+                    <button class="unit-key" data-key="3">3</button>
+                    <button class="unit-key" data-key="0" style="grid-row: span 1;">0</button>
+
+                    <button class="unit-key" data-key="00">00</button>
+                    <button class="unit-key" data-key="000">000</button>
+                    <button class="unit-key" data-key=".">.</button>
+                    <button class="unit-key unit-key-fn" data-key="negate">±</button>
+                </div>
+            </div>
         </div>
 
         <!-- History Panel -->
@@ -388,11 +566,11 @@
         </div>
         <ul class="sidebar-menu">
             <li class="menu-item active" data-view="basic"><i class="fas fa-calculator"></i> 기본 계산기</li>
-            <li class="menu-item"><i class="fas fa-square-root-alt"></i> 공학 계산기</li>
-            <li class="menu-item"><i class="fas fa-ruler-combined"></i> 단위 계산기</li>
+            <li class="menu-item" data-view="sci"><i class="fas fa-square-root-alt"></i> 공학 계산기</li>
+            <li class="menu-item" data-view="unit"><i class="fas fa-ruler-combined"></i> 단위 계산기</li>
             <li class="menu-item" data-view="currency"><i class="fas fa-coins"></i> 환율 계산기</li>
             <li class="menu-item" data-view="photo"><i class="fas fa-camera"></i> 사진 계산기</li>
-            <li class="menu-item"><i class="fas fa-chart-bar"></i> 통계 계산기</li>
+            <li class="menu-item" data-view="stats"><i class="fas fa-chart-bar"></i> 통계 계산기</li>
             <li class="menu-item" data-view="nlp"><i class="fas fa-language"></i> 자연어 계산기</li>
             <li class="menu-item" data-view="tip"><i class="fas fa-coins"></i> 팁 계산기</li>
             <li class="menu-item" data-view="planet"><i class="fas fa-globe"></i> 행성별 무게 계산기</li>

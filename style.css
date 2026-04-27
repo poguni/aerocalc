@@ -142,6 +142,7 @@ body {
     width: 100%;
     max-width: 450px;
     padding: 20px;
+    transform: translateY(-20px);
 }
 
 /* Calculator Main Body */

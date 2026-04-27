@@ -153,6 +153,209 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Photo Calculator View -->
+            <div id="photo-calc-view" style="display: none;">
+                <div class="photo-tabs">
+                    <button id="photo-tab-ev" class="photo-tab active"><i class="fas fa-sun"></i> 노출 계산</button>
+                    <button id="photo-tab-crop" class="photo-tab"><i class="fas fa-crop-alt"></i> 환산 화각</button>
+                </div>
+                
+                <div class="photo-content">
+                    <!-- EV Mode -->
+                    <div id="photo-ev-mode" class="photo-mode active">
+                        <div class="photo-input-group">
+                            <label>조리개 (F-stop)</label>
+                            <select id="photo-aperture" class="photo-select">
+                                <option value="1.4">f/1.4</option>
+                                <option value="2">f/2</option>
+                                <option value="2.8" selected>f/2.8</option>
+                                <option value="4">f/4</option>
+                                <option value="5.6">f/5.6</option>
+                                <option value="8">f/8</option>
+                                <option value="11">f/11</option>
+                                <option value="16">f/16</option>
+                                <option value="22">f/22</option>
+                            </select>
+                        </div>
+                        <div class="photo-input-group">
+                            <label>셔터스피드 (초)</label>
+                            <select id="photo-shutter" class="photo-select">
+                                <option value="0.00025">1/4000</option>
+                                <option value="0.0005">1/2000</option>
+                                <option value="0.001">1/1000</option>
+                                <option value="0.002">1/500</option>
+                                <option value="0.004">1/250</option>
+                                <option value="0.008">1/125</option>
+                                <option value="0.016666">1/60</option>
+                                <option value="0.033333">1/30</option>
+                                <option value="0.066666">1/15</option>
+                                <option value="0.125">1/8</option>
+                                <option value="0.25">1/4</option>
+                                <option value="0.5">1/2</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                        <div class="photo-input-group">
+                            <label>ISO</label>
+                            <select id="photo-iso" class="photo-select">
+                                <option value="100" selected>100</option>
+                                <option value="200">200</option>
+                                <option value="400">400</option>
+                                <option value="800">800</option>
+                                <option value="1600">1600</option>
+                                <option value="3200">3200</option>
+                                <option value="6400">6400</option>
+                            </select>
+                        </div>
+                        <div class="photo-result-display">
+                            <span class="photo-result-label">적정 노출값 (EV)</span>
+                            <span id="photo-ev-result" class="photo-result-value">...</span>
+                        </div>
+                    </div>
+
+                    <!-- Crop Mode -->
+                    <div id="photo-crop-mode" class="photo-mode" style="display: none;">
+                        <div class="photo-input-group">
+                            <label>크롭 비율 (Sensor)</label>
+                            <select id="photo-crop-factor" class="photo-select">
+                                <option value="1">풀프레임 (1.0x)</option>
+                                <option value="1.5" selected>APS-C (1.5x) - Sony/Nikon</option>
+                                <option value="1.6">APS-C (1.6x) - Canon</option>
+                                <option value="2">Micro 4/3 (2.0x)</option>
+                            </select>
+                        </div>
+                        <div class="photo-input-group">
+                            <label>렌즈 초점거리 (mm)</label>
+                            <input type="number" id="photo-focal-length" class="photo-input" value="50" min="1" max="2000">
+                        </div>
+                        <div class="photo-result-display">
+                            <span class="photo-result-label">환산 초점거리</span>
+                            <span id="photo-crop-result" class="photo-result-value">...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planet Calculator View -->
+            <div id="planet-calc-view" style="display: none;">
+                <div class="photo-tabs">
+                    <button id="planet-tab-weight" class="photo-tab active"><i class="fas fa-weight"></i> 행성 무게</button>
+                    <button id="planet-tab-escape" class="photo-tab"><i class="fas fa-rocket"></i> 탈출 속도</button>
+                </div>
+                
+                <div class="photo-content">
+                    <!-- Weight Mode -->
+                    <div id="planet-weight-mode" class="photo-mode active" style="flex-grow: 1; justify-content: space-between; padding-bottom: 10px;">
+                        <div class="planet-top-section">
+                            <div class="photo-input-group">
+                                <label style="text-align: center; font-size: 1.1rem; margin-bottom: 5px;">목표 천체</label>
+                                <select id="planet-target" class="photo-select" style="text-align: center; text-align-last: center;">
+                                    <option value="0.38">수성 (Mercury)</option>
+                                    <option value="0.91">금성 (Venus)</option>
+                                    <option value="0.166" selected>달 (Moon)</option>
+                                    <option value="0.38">화성 (Mars)</option>
+                                    <option value="2.34">목성 (Jupiter)</option>
+                                    <option value="1.06">토성 (Saturn)</option>
+                                    <option value="0.92">천왕성 (Uranus)</option>
+                                    <option value="1.19">해왕성 (Neptune)</option>
+                                    <option value="0.06">명왕성 (Pluto)</option>
+                                    <option value="27.9">태양 (Sun)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="planet-bottom-section" style="display: flex; flex-direction: column; gap: 25px;">
+                            <div class="photo-input-group">
+                                <label style="text-align: center; font-size: 1.2rem; margin-bottom: 5px;">지구에서의 몸무게 (kg)</label>
+                                <input type="number" id="planet-earth-weight" class="photo-input" value="60" min="1" max="2000" style="text-align: center;">
+                            </div>
+                            <div class="photo-result-display" style="margin-top: 0;">
+                                <span class="photo-result-label" id="planet-weight-label" style="font-size: 1.2rem;">달에서의 몸무게</span>
+                                <span id="planet-weight-result" class="photo-result-value">...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Escape Velocity Mode -->
+                    <div id="planet-escape-mode" class="photo-mode" style="display: none;">
+                        <div class="photo-input-group">
+                            <label>천체 선택</label>
+                            <select id="planet-escape-preset" class="photo-select">
+                                <option value="11.186" selected>지구 (Earth)</option>
+                                <option value="2.38">달 (Moon)</option>
+                                <option value="5.03">화성 (Mars)</option>
+                                <option value="59.5">목성 (Jupiter)</option>
+                                <option value="35.5">토성 (Saturn)</option>
+                                <option value="21.3">천왕성 (Uranus)</option>
+                                <option value="23.5">해왕성 (Neptune)</option>
+                                <option value="615">태양 (Sun)</option>
+                                <option value="custom">직접 입력...</option>
+                            </select>
+                        </div>
+                        <div id="planet-escape-custom" style="display: none;">
+                            <div class="photo-input-group">
+                                <label>질량 (10^24 kg)</label>
+                                <input type="number" id="planet-custom-mass" class="photo-input" value="5.972">
+                            </div>
+                            <div class="photo-input-group" style="margin-top: 15px;">
+                                <label>반지름 (km)</label>
+                                <input type="number" id="planet-custom-radius" class="photo-input" value="6371">
+                            </div>
+                        </div>
+                        <div class="photo-result-display" style="margin-top: auto;">
+                            <span class="photo-result-label">탈출 속도</span>
+                            <span id="planet-escape-result" class="photo-result-value">...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tip Calculator View -->
+            <div id="tip-calc-view" class="photo-mode" style="display: none; flex-grow: 1;">
+                <div style="display: flex; gap: 15px;">
+                    <div class="photo-input-group" style="flex: 1;">
+                        <label>전체 식사 비용</label>
+                        <input type="number" id="tip-total-bill" class="photo-input" placeholder="예: 50000" min="0">
+                    </div>
+                    <div class="photo-input-group" style="flex: 1;">
+                        <label>인원수 (명)</label>
+                        <input type="number" id="tip-people-count" class="photo-input" value="1" min="1">
+                    </div>
+                </div>
+
+                <div class="photo-input-group">
+                    <label>팁 비율 (%)</label>
+                    <div class="tip-btn-group">
+                        <button class="tip-btn" data-tip="10">10%</button>
+                        <button class="tip-btn" data-tip="12">12%</button>
+                        <button class="tip-btn active" data-tip="15">15%</button>
+                        <button class="tip-btn" data-tip="20">20%</button>
+                        <button class="tip-btn" data-tip="custom">직접입력</button>
+                    </div>
+                    <input type="number" id="tip-custom-percent" class="photo-input" placeholder="팁 % 입력" style="display: none; margin-top: 10px;" min="0">
+                </div>
+
+                <div class="tip-summary-panel">
+                    <div class="tip-summary-row">
+                        <span>총 팁 금액</span>
+                        <span id="tip-total-amount">0</span>
+                    </div>
+                    <div class="tip-summary-row">
+                        <span>총 결제 금액</span>
+                        <span id="tip-total-with-tip">0</span>
+                    </div>
+                </div>
+
+                <div class="photo-result-display" style="margin-top: auto;">
+                    <span class="photo-result-label">1인당 내야 할 금액</span>
+                    <span id="tip-per-person-result" class="photo-result-value">0</span>
+                </div>
+
+                <button id="tip-clear-btn" style="background: transparent; border: 1px solid var(--action-color); color: var(--action-color); padding: 10px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-size: 1rem; font-family: inherit; font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 5px; transition: all 0.2s ease; flex-shrink: 0;">
+                    <i class="fas fa-undo"></i> 초기화 (Clear)
+                </button>
+            </div>
         </div>
 
         <!-- History Panel -->
@@ -188,11 +391,11 @@
             <li class="menu-item"><i class="fas fa-square-root-alt"></i> 공학 계산기</li>
             <li class="menu-item"><i class="fas fa-ruler-combined"></i> 단위 계산기</li>
             <li class="menu-item" data-view="currency"><i class="fas fa-coins"></i> 환율 계산기</li>
-            <li class="menu-item"><i class="fas fa-camera"></i> 사진 계산기</li>
+            <li class="menu-item" data-view="photo"><i class="fas fa-camera"></i> 사진 계산기</li>
             <li class="menu-item"><i class="fas fa-chart-bar"></i> 통계 계산기</li>
             <li class="menu-item" data-view="nlp"><i class="fas fa-language"></i> 자연어 계산기</li>
-            <li class="menu-item"><i class="fas fa-coins"></i> 팁 계산기</li>
-            <li class="menu-item"><i class="fas fa-globe"></i> 행성별 무게 계산기</li>
+            <li class="menu-item" data-view="tip"><i class="fas fa-coins"></i> 팁 계산기</li>
+            <li class="menu-item" data-view="planet"><i class="fas fa-globe"></i> 행성별 무게 계산기</li>
         </ul>
     </div>
 

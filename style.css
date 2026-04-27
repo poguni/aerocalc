@@ -774,3 +774,193 @@ body {
     font-size: 1.3rem;
     border-radius: 20px;
 }
+
+/* ==========================================
+   Photo Calculator Styles
+   ========================================== */
+#photo-calc-view, #planet-calc-view, #tip-calc-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.photo-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: var(--btn-bg);
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.photo-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px;
+    border-radius: 15px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.photo-tab.active {
+    background: var(--glass-bg);
+    color: var(--text-main);
+    box-shadow: var(--glass-shadow);
+}
+
+.photo-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.photo-mode {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.photo-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.photo-input-group label {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-left: 5px;
+}
+
+.photo-select, .photo-input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    font-size: 1.2rem;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    appearance: none; /* remove default dropdown arrow in some browsers to look cleaner */
+}
+
+.photo-select:focus, .photo-input:focus {
+    border-color: var(--operator-color);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+.photo-select option {
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
+.photo-result-display {
+    margin-top: auto;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--glass-shadow);
+}
+
+.photo-result-label {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.photo-result-value {
+    color: var(--text-main);
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+/* Planet Calculator Layout */
+.planet-layout-bottom {
+    margin-top: auto;
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.planet-col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.planet-col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+/* ==========================================
+   Tip Calculator Styles
+   ========================================== */
+.tip-btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tip-btn {
+    flex: 1;
+    min-width: 60px;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    padding: 10px;
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tip-btn:hover {
+    background: var(--btn-hover);
+    color: var(--text-main);
+}
+
+.tip-btn.active {
+    background: var(--operator-color);
+    color: white;
+    border-color: var(--operator-color);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.tip-summary-panel {
+    background: var(--btn-bg);
+    border-radius: 15px;
+    padding: 15px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tip-summary-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.tip-summary-row span:last-child {
+    color: var(--text-main);
+    font-weight: 500;
+}

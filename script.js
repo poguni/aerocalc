@@ -345,6 +345,9 @@ sidebarOverlay.addEventListener('click', toggleSidebar);
 const basicCalcView = document.getElementById('basic-calc-view');
 const currencyCalcView = document.getElementById('currency-calc-view');
 const nlpCalcView = document.getElementById('nlp-calc-view');
+const photoCalcView = document.getElementById('photo-calc-view');
+const planetCalcView = document.getElementById('planet-calc-view');
+const tipCalcView = document.getElementById('tip-calc-view');
 
 document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -358,15 +361,50 @@ document.querySelectorAll('.menu-item').forEach(item => {
             basicCalcView.style.display = 'flex';
             currencyCalcView.style.display = 'none';
             if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
         } else if (view === 'currency') {
             basicCalcView.style.display = 'none';
             currencyCalcView.style.display = 'flex';
             if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
             initCurrencyCalc();
         } else if (view === 'nlp') {
             basicCalcView.style.display = 'none';
             currencyCalcView.style.display = 'none';
             if (nlpCalcView) nlpCalcView.style.display = 'flex';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
+        } else if (view === 'photo') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'flex';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'none';
+            calculateEV();
+            calculateCrop();
+        } else if (view === 'planet') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'flex';
+            if (tipCalcView) tipCalcView.style.display = 'none';
+            calculatePlanetWeight();
+            calculateEscapeVelocity();
+        } else if (view === 'tip') {
+            basicCalcView.style.display = 'none';
+            currencyCalcView.style.display = 'none';
+            if (nlpCalcView) nlpCalcView.style.display = 'none';
+            if (photoCalcView) photoCalcView.style.display = 'none';
+            if (planetCalcView) planetCalcView.style.display = 'none';
+            if (tipCalcView) tipCalcView.style.display = 'flex';
+            calculateTip();
         }
         
         // Close sidebar after selection
@@ -723,4 +761,245 @@ function parseAndCalculateNLP(inputText) {
         console.error('NLP 계산 오류:', e, '수식:', sanitized);
         nlpResultDisplay.innerText = "계산 오류: " + sanitized + " 를 계산할 수 없습니다.";
     }
+}
+
+// ==========================================
+// Photo Calculator Logic
+// ==========================================
+const photoTabEv = document.getElementById('photo-tab-ev');
+const photoTabCrop = document.getElementById('photo-tab-crop');
+const photoEvMode = document.getElementById('photo-ev-mode');
+const photoCropMode = document.getElementById('photo-crop-mode');
+
+if (photoTabEv && photoTabCrop) {
+    photoTabEv.addEventListener('click', () => {
+        photoTabEv.classList.add('active');
+        photoTabCrop.classList.remove('active');
+        photoEvMode.style.display = 'flex';
+        photoCropMode.style.display = 'none';
+    });
+
+    photoTabCrop.addEventListener('click', () => {
+        photoTabCrop.classList.add('active');
+        photoTabEv.classList.remove('active');
+        photoCropMode.style.display = 'flex';
+        photoEvMode.style.display = 'none';
+    });
+}
+
+// EV Calculation
+const photoAperture = document.getElementById('photo-aperture');
+const photoShutter = document.getElementById('photo-shutter');
+const photoIso = document.getElementById('photo-iso');
+const photoEvResult = document.getElementById('photo-ev-result');
+
+function calculateEV() {
+    if (!photoAperture || !photoShutter || !photoIso || !photoEvResult) return;
+    
+    const f = parseFloat(photoAperture.value);
+    const t = parseFloat(photoShutter.value);
+    const iso = parseFloat(photoIso.value);
+    
+    // EV100 = log2(N^2 / t)
+    const ev100 = Math.log2((f * f) / t);
+    
+    // Equivalent Scene EV = EV100 - log2(ISO/100)
+    const sceneEv = ev100 - Math.log2(iso / 100);
+    
+    photoEvResult.innerText = sceneEv.toFixed(1);
+}
+
+if (photoAperture) photoAperture.addEventListener('change', calculateEV);
+if (photoShutter) photoShutter.addEventListener('change', calculateEV);
+if (photoIso) photoIso.addEventListener('change', calculateEV);
+
+// Crop Calculation
+const photoCropFactor = document.getElementById('photo-crop-factor');
+const photoFocalLength = document.getElementById('photo-focal-length');
+const photoCropResult = document.getElementById('photo-crop-result');
+
+function calculateCrop() {
+    if (!photoCropFactor || !photoFocalLength || !photoCropResult) return;
+    
+    const factor = parseFloat(photoCropFactor.value);
+    const focal = parseFloat(photoFocalLength.value) || 0;
+    
+    const equivalent = Math.round(focal * factor);
+    photoCropResult.innerText = equivalent + " mm";
+}
+
+if (photoCropFactor) photoCropFactor.addEventListener('change', calculateCrop);
+if (photoFocalLength) photoFocalLength.addEventListener('input', calculateCrop);
+
+// ==========================================
+// Planet Calculator Logic
+// ==========================================
+const planetTabWeight = document.getElementById('planet-tab-weight');
+const planetTabEscape = document.getElementById('planet-tab-escape');
+const planetWeightMode = document.getElementById('planet-weight-mode');
+const planetEscapeMode = document.getElementById('planet-escape-mode');
+
+if (planetTabWeight && planetTabEscape) {
+    planetTabWeight.addEventListener('click', () => {
+        planetTabWeight.classList.add('active');
+        planetTabEscape.classList.remove('active');
+        planetWeightMode.style.display = 'flex';
+        planetEscapeMode.style.display = 'none';
+    });
+
+    planetTabEscape.addEventListener('click', () => {
+        planetTabEscape.classList.add('active');
+        planetTabWeight.classList.remove('active');
+        planetEscapeMode.style.display = 'flex';
+        planetWeightMode.style.display = 'none';
+    });
+}
+
+// Planet Weight Calculation
+const planetEarthWeight = document.getElementById('planet-earth-weight');
+const planetTarget = document.getElementById('planet-target');
+const planetWeightLabel = document.getElementById('planet-weight-label');
+const planetWeightResult = document.getElementById('planet-weight-result');
+
+function calculatePlanetWeight() {
+    if (!planetEarthWeight || !planetTarget || !planetWeightResult) return;
+    
+    const weight = parseFloat(planetEarthWeight.value) || 0;
+    const gravityRatio = parseFloat(planetTarget.value);
+    const planetName = planetTarget.options[planetTarget.selectedIndex].text.split(' ')[0]; // Extract Korean name
+    
+    const targetWeight = weight * gravityRatio;
+    
+    if (planetWeightLabel) {
+        planetWeightLabel.innerText = `${planetName}에서의 몸무게`;
+    }
+    planetWeightResult.innerText = targetWeight.toFixed(2) + " kg";
+}
+
+if (planetEarthWeight) planetEarthWeight.addEventListener('input', calculatePlanetWeight);
+if (planetTarget) planetTarget.addEventListener('change', calculatePlanetWeight);
+
+// Planet Escape Velocity Calculation
+const planetEscapePreset = document.getElementById('planet-escape-preset');
+const planetEscapeCustom = document.getElementById('planet-escape-custom');
+const planetCustomMass = document.getElementById('planet-custom-mass');
+const planetCustomRadius = document.getElementById('planet-custom-radius');
+const planetEscapeResult = document.getElementById('planet-escape-result');
+
+const G = 6.67430e-11; // Gravitational constant
+
+function calculateEscapeVelocity() {
+    if (!planetEscapePreset || !planetEscapeResult) return;
+    
+    const val = planetEscapePreset.value;
+    
+    if (val === 'custom') {
+        if (planetEscapeCustom) planetEscapeCustom.style.display = 'block';
+        
+        const mass = parseFloat(planetCustomMass.value) || 0; // * 10^24 kg
+        const radius = parseFloat(planetCustomRadius.value) || 0; // km
+        
+        if (mass > 0 && radius > 0) {
+            const mKg = mass * 1e24;
+            const rM = radius * 1000;
+            // v = sqrt(2GM/r) in m/s
+            const v = Math.sqrt((2 * G * mKg) / rM);
+            const vKm = v / 1000;
+            planetEscapeResult.innerText = vKm.toFixed(2) + " km/s";
+        } else {
+            planetEscapeResult.innerText = "0.00 km/s";
+        }
+    } else {
+        if (planetEscapeCustom) planetEscapeCustom.style.display = 'none';
+        const vKm = parseFloat(val);
+        planetEscapeResult.innerText = vKm.toFixed(2) + " km/s";
+    }
+}
+
+if (planetEscapePreset) planetEscapePreset.addEventListener('change', calculateEscapeVelocity);
+if (planetCustomMass) planetCustomMass.addEventListener('input', calculateEscapeVelocity);
+if (planetCustomRadius) planetCustomRadius.addEventListener('input', calculateEscapeVelocity);
+
+// ==========================================
+// Tip Calculator Logic
+// ==========================================
+const tipTotalBill = document.getElementById('tip-total-bill');
+const tipBtns = document.querySelectorAll('.tip-btn');
+const tipCustomPercent = document.getElementById('tip-custom-percent');
+const tipPeopleCount = document.getElementById('tip-people-count');
+const tipTotalAmount = document.getElementById('tip-total-amount');
+const tipTotalWithTip = document.getElementById('tip-total-with-tip');
+const tipPerPersonResult = document.getElementById('tip-per-person-result');
+
+let currentTipPercent = 15;
+
+tipBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        tipBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const tipVal = btn.getAttribute('data-tip');
+        if (tipVal === 'custom') {
+            tipCustomPercent.style.display = 'block';
+            currentTipPercent = parseFloat(tipCustomPercent.value) || 0;
+            tipCustomPercent.focus();
+        } else {
+            tipCustomPercent.style.display = 'none';
+            currentTipPercent = parseFloat(tipVal);
+        }
+        calculateTip();
+    });
+});
+
+if (tipCustomPercent) {
+    tipCustomPercent.addEventListener('input', () => {
+        currentTipPercent = parseFloat(tipCustomPercent.value) || 0;
+        calculateTip();
+    });
+}
+
+function calculateTip() {
+    if (!tipTotalBill || !tipPeopleCount || !tipPerPersonResult) return;
+    
+    const bill = parseFloat(tipTotalBill.value) || 0;
+    let people = parseInt(tipPeopleCount.value) || 1;
+    if (people < 1) people = 1; // 방어 코드: 인원수는 1 이상
+    
+    const tipAmount = bill * (currentTipPercent / 100);
+    const totalAmount = bill + tipAmount;
+    const perPerson = totalAmount / people;
+    
+    // Formatting currency (add commas)
+    const formatCurrency = (val) => {
+        return Math.round(val).toLocaleString(); 
+    };
+    
+    if (tipTotalAmount) tipTotalAmount.innerText = formatCurrency(tipAmount);
+    if (tipTotalWithTip) tipTotalWithTip.innerText = formatCurrency(totalAmount);
+    tipPerPersonResult.innerText = formatCurrency(perPerson);
+}
+
+if (tipTotalBill) tipTotalBill.addEventListener('input', calculateTip);
+if (tipPeopleCount) tipPeopleCount.addEventListener('input', calculateTip);
+
+const tipClearBtn = document.getElementById('tip-clear-btn');
+if (tipClearBtn) {
+    tipClearBtn.addEventListener('click', () => {
+        if (tipTotalBill) tipTotalBill.value = '';
+        if (tipPeopleCount) tipPeopleCount.value = '1';
+        if (tipCustomPercent) {
+            tipCustomPercent.value = '';
+            tipCustomPercent.style.display = 'none';
+        }
+        
+        currentTipPercent = 15;
+        tipBtns.forEach(b => {
+            b.classList.remove('active');
+            if (b.getAttribute('data-tip') === '15') {
+                b.classList.add('active');
+            }
+        });
+        
+        calculateTip();
+    });
 }
